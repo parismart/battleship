@@ -19,15 +19,14 @@ def check_coord(x, y):
 def player_fire(player):
 	while True:
 		y = ord(input("First coordinate(A-J): ").lower())-97
-		x = ord(input("Second coordinate(1-10): "))-49
+		x = int(input("Second coordinate(1-10): "))-1
 		if check_coord(x,y) == 1:
 			continue
 		if check_fire(player.board_machine, x, y) == 1:
-			print("Repeated coordinate")
+			print("Coordenada repetida")
 			continue
 		if player.fire(x, y) == 1:
 			continue
-		print(f" {np.array(['A','B','C','D','E','F','G','H','I','J'])}")
 		print(player.board_machine)
 		break
 
@@ -40,46 +39,57 @@ def machine_fire(machine,dificulty):
 				break
 		if check_fire(machine.board_machine, x, y) == 1:
 			continue
-		print(f"Machine shoots in ({x},{y})")
+		print(f"La maquina dispara en ({x},{y})")
 		if machine.fire(x, y) == 1:
 			continue
-		print(f" {np.array(['A','B','C','D','E','F','G','H','I','J'])}")
 		print(machine.board)
 		break
 
-def difficulty():
+def dificulty():
 	while True:
-		difficulty = input("Choose the level of difficulty(Easy/Medium/Hard): ").lower()
-		x = 1
-		if difficulty == "easy":
+		dificulty = input("Elige el nivel de dificultad (Easy/Medium/Hard): ").lower()
+		if dificulty == "easy":
+			dificulty = 1
 			break
-		elif difficulty == "medium":
-			x = 2
+		elif dificulty == "medium":
+			dificulty = 2
 			break
-		elif difficulty == "hard":
-			x = 3
+		elif dificulty == "hard":
+			dificulty = 3
 			break
 		else:
-			print("Invalid response")
+			print("Respuesta no válida")
 			continue
-	return(x)
+	return(dificulty)
 
 def options(player, machine):
 	while True:
-		answer = input("Print Board(b) / Print shots(s) /Exit game (exit) / Continue (c) ").lower()
-		if answer == 'b':
+		answer = input("Imprimir tablero(t) / Imprimir Impactos(i) /Salir del juego (s) / Continuar (c) ")
+		if answer == 't':
 			print(machine.board)
 			continue
-		elif answer == 's':
+		elif answer == 'i':
 			print(player.board_machine)
 			continue
-		elif answer == 'exit':
+		elif answer == 's':
 			return(1)
 		elif answer == 'c':
 			break
 		else:
-			print("Invalid option")
+			print("Opción no válida")
 			continue
+	return(0)
+
+def exit_game(player, machine):
+	if player.inv == []:
+		print("You Win")
+		return(1)
+	elif machine.inv == []:
+		print("You Lose")
+		return(1)
+	answer = input("¿Quieres continuar el juego? (s/n): ")
+	if answer == 'n':
+		return(1)
 	return(0)
 
 def welcome():

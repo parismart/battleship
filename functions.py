@@ -1,7 +1,11 @@
 import numpy as np
 
+def num_letter(x):
+	dic = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',7:'H',8:'I',9:'J'}
+	return(dic[x])
+
 def check_fire(board, x, y):
-	if board[x, y] == '1' or board[x, y] == 'X':
+	if board[x, y] == 'W' or board[x, y] == 'X':
 		return(1)
 	return(0)
 
@@ -18,8 +22,12 @@ def check_coord(x, y):
 
 def player_fire(player):
 	while True:
-		y = ord(input("First coordinate(A-J): ").lower())-97
-		x = ord(input("Second coordinate(1-10): "))-49
+		try:
+			y = ord(input("First coordinate(A-J): ").lower())-97
+			x = int(input("Second coordinate(1-10): "))-1
+		except:
+			print("Invalid coordinate")
+			continue
 		if check_coord(x,y) == 1:
 			continue
 		if check_fire(player.board_machine, x, y) == 1:
@@ -40,7 +48,7 @@ def machine_fire(machine,dificulty):
 				break
 		if check_fire(machine.board_machine, x, y) == 1:
 			continue
-		print(f"Machine shoots in ({x},{y})")
+		print(f"Machine shoots in '{num_letter(y)}{x+1}'")
 		if machine.fire(x, y) == 1:
 			continue
 		print(f" {np.array(['A','B','C','D','E','F','G','H','I','J'])}")
@@ -63,6 +71,20 @@ def difficulty():
 			print("Invalid response")
 			continue
 	return(x)
+
+def place_ships():
+	while True:
+		answer = input("Do you want to place your ships or do you prefer to assign them randomly?\
+(Place/Random): ").lower()
+		if answer == "random" or answer == 'r':
+			return(0)
+		elif answer == "place" or answer == 'p':
+			print("The order of the coordinates to enter will be: \
+1 boat of length 4, 2 boats of length 3, 3 boats of length 2 and finally 4 boats of length 1")
+			return(1)
+		else:
+			print("Invalid option")
+			continue
 
 def options(player, machine):
 	while True:
@@ -109,4 +131,3 @@ When all of the squares of a ship have been hit, the ship's owner announces the 
 If all of a player's ships have been sunk, the game is over and their opponent wins.
 If all ships of both players are sunk by the end of the round, the game is a draw.
 """)
-

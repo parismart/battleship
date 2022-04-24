@@ -5,7 +5,7 @@ func.welcome()
 difficulty = func.difficulty()
 player = cl.Board(func.place_ships())
 machine = cl.Board()
-print(machine.board)
+print(f"{cl.color.yellow}{machine.board}{cl.color.reset}")
 
 while True:
     func.player_fire(player)

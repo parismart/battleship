@@ -1,21 +1,25 @@
 import numpy as np
+import classes as cl
 
+#convert the coordinates from numbers to letters
 def num_letter(x):
-	dic = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',7:'H',8:'I',9:'J'}
+	dic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I',10:'J'}
 	return(dic[x])
 
+#Check if coordinates are repeat
 def check_fire(board, x, y):
 	if board[x, y] == 'W' or board[x, y] == 'X':
 		return(1)
 	return(0)
-
+#Check if the machine hit the shot and repeat for the difficulty level
 def check_match(inv, x, y):
 	if (x, y) in inv:
 		return(1)
 	return(0)
 
+#Check coordinates are inner the map
 def check_coord(x, y):
-	if x < 0 or x > 9 or y < 0 or y > 9:
+	if x < 1 or x > 10 or y < 1 or y > 10:
 		print("off-map coordinates")
 		return(1)
 	return(0)
@@ -23,8 +27,8 @@ def check_coord(x, y):
 def player_fire(player):
 	while True:
 		try:
-			y = ord(input("First coordinate(A-J): ").lower())-97
-			x = int(input("Second coordinate(1-10): "))-1
+			y = ord(input("First coordinate(A-J): ").lower())-96
+			x = int(input("Second coordinate(0-9): "))+1
 		except:
 			print("Invalid coordinate")
 			continue
@@ -35,24 +39,23 @@ def player_fire(player):
 			continue
 		if player.fire(x, y) == 1:
 			continue
-		print(f" {np.array(['A','B','C','D','E','F','G','H','I','J'])}")
-		print(player.board_machine)
+		print(f"{cl.color.yellow}{player.board_machine}{cl.color.reset}")
 		break
 
 def machine_fire(machine,dificulty):
 	while True:
 		for i in range(dificulty):
-			x = np.random.randint(10)
-			y = np.random.randint(10)
+			x = np.random.randint(1,11)
+			y = np.random.randint(1,11)
 			if check_match(machine.inv, x, y) == 1:
 				break
 		if check_fire(machine.board_machine, x, y) == 1:
 			continue
-		print(f"Machine shoots in '{num_letter(y)}{x+1}'")
+		print(cl.color.red + "Machine shoots in " + num_letter(y) + str(x-1) + cl.color.reset)
+		#Continue shoot if match
 		if machine.fire(x, y) == 1:
 			continue
-		print(f" {np.array(['A','B','C','D','E','F','G','H','I','J'])}")
-		print(machine.board)
+		print(f"{cl.color.yellow}{machine.board}{cl.color.reset}")
 		break
 
 def difficulty():
@@ -88,12 +91,15 @@ def place_ships():
 
 def options(player, machine):
 	while True:
-		answer = input("Print Board(b) / Print shots(s) /Exit game (exit) / Continue (c) ").lower()
+		answer = input(cl.color.white+"Print Board(b) / Print shots(s) /Exit game (exit) / Continue (c) "+cl.color.reset).lower()
 		if answer == 'b':
 			print(machine.board)
 			continue
 		elif answer == 's':
 			print(player.board_machine)
+			continue
+		elif answer == 'cheat':
+			print(f"{cl.color.cheat}{player.board}{cl.color.reset}")
 			continue
 		elif answer == 'exit':
 			return(1)
@@ -105,7 +111,7 @@ def options(player, machine):
 	return(0)
 
 def welcome():
-	print("""
+	print(cl.color.green + """
 Welcome to Battleship:
 
 The game is played on four grids, two for each player. The grids are square  10x10
@@ -130,4 +136,4 @@ in order to build up a picture of the opponent's fleet.
 When all of the squares of a ship have been hit, the ship's owner announces the sinking of the ship.
 If all of a player's ships have been sunk, the game is over and their opponent wins.
 If all ships of both players are sunk by the end of the round, the game is a draw.
-""")
+""" + cl.color.reset)
